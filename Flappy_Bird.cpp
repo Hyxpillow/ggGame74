@@ -23,6 +23,7 @@ void InitData() {
 	//解释：设置地图幅度，鸟的坐标，水管（障碍）的坐标
 }
 void InitMap() {
+	system("cls");
 	for (int i = 1; i <= Map_height - 1; i++) {
 		Map[i][1] = 4;
 		for (int j = 2; j < Map_width - 1; j++)
