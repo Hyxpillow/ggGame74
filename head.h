@@ -8,7 +8,5 @@
 #include <stdlib.h>
 #include <graphics.h>
 #include "others.h"
-#include "Flappy_Bird.h"
-#include "others.h"
 
 #endif

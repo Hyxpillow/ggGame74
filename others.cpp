@@ -1,4 +1,6 @@
 #include "head.h"
+#define MAXSTAR 100
+Star star[200];
 
 void menu(int& sel) {
 	char option[][20] = { "CXK走迷宫","FLAPPY CAI","CXK推箱子","贪吃的CXK","CXK的连连看","退出" };
@@ -66,4 +68,52 @@ void HideCursor() //隐藏光标
 	GetConsoleCursorInfo(hOut, &cci);
 	cci.bVisible = FALSE;
 	SetConsoleCursorInfo(hOut, &cci);
+}
+
+//游戏结束界面的主体代码部分
+void InitStar(int i)
+{
+	star[i].x = 0;
+	star[i].y = rand() % 480;
+	star[i].step = (rand() % 5000) / 1000.0 + 1;
+	star[i].color = (int)(star[i].step * 255 / 6.0 + 0.5);
+	star[i].color = RGB(star[i].color, star[i].color, star[i].color);
+}
+//解释：初始化星星（像素点），因为要铺满平面，所以y值是小于画面纵坐标的随机数，星星是一个结构体，它的step是每一次循环向前走的长度，表现为速度，color是RGB调色，此次调成白色。
+void MoveStar(int i)
+{
+	putpixel((int)star[i].x, star[i].y, 0);
+	//解释：画像素点的函数
+	star[i].x += star[i].step;
+	//解释：每一次都要向前走
+	if (star[i].x > 640)	InitStar(i);
+	//解释：如果星星的x坐标超过画面的横坐标，就初始化位置
+	putpixel((int)star[i].x, star[i].y, star[i].color);
+}
+
+void enDgame()
+{
+	srand((unsigned)time(NULL));	// 随机种子
+	initgraph(640, 480);			// 创建绘图窗口
+
+	//解释：初始化画布，确定大小
+	for (int i = 0; i < MAXSTAR; i++)
+	{
+		InitStar(i);
+		star[i].x = rand() % 640;
+	}
+
+	while (!_kbhit())
+	{
+		IMAGE img;
+		loadimage(&img, _T("C:\\Users\\Hyxpillow\\Desktop\\timg.jpg"));
+		putimage(240, 160, &img);
+		outtextxy(260, 300, TEXT("game over"));
+		for (int i = 0; i < MAXSTAR; i++)
+			MoveStar(i);
+		Sleep(20);
+	}
+	//解释：当没有键盘敲击的时候，在制定位置加载一张图片，和一行game over文字，并依次移动每一个星星，速度是随机数的形式
+	closegraph();
+	getchar();
 }
